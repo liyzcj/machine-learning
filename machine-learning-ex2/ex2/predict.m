@@ -15,10 +15,11 @@ p = zeros(m, 1);
 %               You should set p to a vector of 0's and 1's
 %
 
-
-
-
-
+H = sigmoid(X * theta);
+pos = H >= 0.5;
+neg = H < 0.5;
+p(pos) = 1 ;
+p(neg) = 0 ;
 
 
 % =========================================================================
