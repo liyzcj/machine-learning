@@ -61,24 +61,47 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
+% Part 1 : forward propagation===>
+A1 = X;
+A1 = [ones(m, 1) A1];
+H2 = Theta1 * A1';
+A2 = sigmoid(H2);
+A2 = [ones(1, size(A2, 2)); A2];
+H3 = Theta2 * A2;
+A3 = sigmoid(H3);
+Y = repmat(1:num_labels,m,1);
+Y = Y == y;
+% Vectorized way to comput cost J
+J = - Y' .* log(A3) - (1 - Y)' .* log(1 - A3);
+J = sum(J(:)) / m;
+% Not vectorized way
+% for i = 1:5000
+%     for j = 1:10
+%         J = J +( -Y(i,j) * log(A3(j,i)) - (1 - Y(i,j)) * log(1 - A3(j,i)));
+%     end
+% end
+% J = J / m;
 
+% Cost Function with Regularized
+Reg1 = Theta1(:,2:end) .^ 2;
+Reg2 = Theta2(:,2:end) .^ 2;
+Reg = (sum(Reg1(:)) + sum(Reg2(:))) * lambda / (2 * m);
+J = J + Reg;
 
+% Part 2 : back propagation == > 
 
+delta3 = A3 - Y';
+Temp  = Theta2' * delta3;
+Temp = Temp(2:end,:);
+delta2 = Temp .* sigmoidGradient(H2);
+Delta1 = delta2 * A1;
+Delta2 = delta3 * A2';
+Theta1_grad = Delta1 / m;
+Theta2_grad = Delta2 / m;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% Part 3 : Regularized Gradient
+Theta1_grad(:,2:end) = Theta1_grad(:,2:end) + Theta1(:,2:end) * lambda / m;
+Theta2_grad(:,2:end) = Theta2_grad(:,2:end) + Theta2(:,2:end) * lambda / m;
 
 % -------------------------------------------------------------
 
