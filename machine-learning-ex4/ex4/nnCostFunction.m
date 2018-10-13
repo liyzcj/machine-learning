@@ -61,16 +61,16 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-% Part 1 : forward propagation===>
-A1 = X;
-A1 = [ones(m, 1) A1];
-H2 = Theta1 * A1';
-A2 = sigmoid(H2);
-A2 = [ones(1, size(A2, 2)); A2];
-H3 = Theta2 * A2;
-A3 = sigmoid(H3);
-Y = repmat(1:num_labels,m,1);
-Y = Y == y;
+% Part 1 : forward propagation===>  m is the number of train data
+A1 = X; % dim = (m * 400)
+A1 = [ones(m, 1) A1]; % dim = (m * 401) 
+H2 = Theta1 * A1'; % H2.dim = (25 * m) | Theta1.dim = (25 * 401) | A1'.dim = (401 * m)
+A2 = sigmoid(H2); % A2.dim = (25 * m)
+A2 = [ones(1, size(A2, 2)); A2]; % A2.dim = (26 * m)
+H3 = Theta2 * A2; % H3.dim = (10 * m) | Theta2.dim = (10 * 26) | A2.dim = (26 * m)
+A3 = sigmoid(H3); % A3.dim = (10 * m)
+Y = repmat(1:num_labels,m,1); % Y.dim = (m * 10)
+Y = Y == y; % Y.dim = (m * 10)
 % Vectorized way to comput cost J
 J = - Y' .* log(A3) - (1 - Y)' .* log(1 - A3);
 J = sum(J(:)) / m;
