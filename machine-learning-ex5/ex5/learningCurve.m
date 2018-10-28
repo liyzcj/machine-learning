@@ -52,11 +52,34 @@ error_val   = zeros(m, 1);
 %
 
 % ---------------------- Sample Solution ----------------------
+% for i = 1:m
+%     xt = X(1:i,:);
+%     yt =  y(1:i);
+%     theta = trainLinearReg(xt, yt, lambda);
+%     error_train(i) = linearRegCostFunction(xt, yt, theta, 0);
+%     error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+% end
 
 
+% ---------- Optional exercise: randomly choose sets ----------
+temp_train = zeros(50,1);
+temp_val = zeros(50,1);
 
-
-
+for i = 1:m
+    for j = 1:50
+        idx = randperm(m,i);
+        xt = X(idx,:);
+        yt =  y(idx);
+        idx = randperm(m,i);
+        xv = Xval(idx,:);
+        yv = yval(idx);
+        theta = trainLinearReg(xt, yt, lambda);
+        temp_train(j) = linearRegCostFunction(xt, yt, theta, 0);
+        temp_val(j) = linearRegCostFunction(xv, yv, theta, 0);  
+    end
+    error_train(i) = mean(temp_train);
+    error_val(i) = mean(temp_val);
+end
 
 
 % -------------------------------------------------------------
