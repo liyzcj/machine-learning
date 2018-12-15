@@ -20,10 +20,14 @@ idx = zeros(size(X,1), 1);
 %
 % Note: You can use a for-loop over the examples to compute this.
 %
-
-
-
-
+% Compute distance
+for i = 1:1:size(X,1)
+    distance = zeros(K,1);
+    for j = 1:K
+        distance(j) = norm(X(i,:) - centroids(j,:));
+    end
+    [~,idx(i,1)] = min(distance); 
+end
 
 
 
