@@ -39,21 +39,33 @@ Theta_grad = zeros(size(Theta));
 %        Theta_grad - num_users x num_features matrix, containing the 
 %                     partial derivatives w.r.t. to each element of Theta
 %
+% Cost function J without Regularization
+pred = X * Theta';
+J = sum(sum((pred .* R - Y) .^ 2)) / 2;
 
+% Regularization
+R_x = lambda * sum(sum(X .^ 2)) /2;
+R_theta = lambda * sum(sum(Theta .^ 2)) / 2;
 
+% Cost with Regularization
+J = J + R_x + R_theta;
 
-
-
-
-
-
-
-
-
-
-
-
-
+% Gradient of X
+for i = 1:num_movies
+    idx = find(R(i,:)==1);
+    Theta_temp = Theta(idx,:);
+    Y_temp = Y(i,idx);
+    X_grad(i,:) = (X(i,:)*Theta_temp' - Y_temp) * Theta_temp + ...
+        lambda * X(i,:);
+end
+% Gradient of Theta
+for j = 1:num_users
+    idx = find(R(:,j)==1);
+    X_temp = X(idx,:);
+    Y_temp = Y(idx,j);
+    Theta_grad(j,:) = (X_temp * Theta(j,:)' - Y_temp)' * X_temp + ...
+        lambda * Theta(j,:);
+end
 
 % =============================================================
 
